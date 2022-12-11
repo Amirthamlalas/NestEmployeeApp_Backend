@@ -36,6 +36,24 @@ public class EmployeeController {
     }
 
     @CrossOrigin(origins = "*")
+    @PostMapping(path = "/login",consumes = "application/json",produces = "application/json")
+    public HashMap<String, String> employeeLogin(@RequestBody Employees e){
+        int empcode=e.getEmpcode();
+        String email=e.getEmail().toString();
+        List<Employees> result=(List<Employees>) dao.EmployeeLogin(e.getEmpcode(),e.getEmail());
+        HashMap<String,String>map=new HashMap<>();
+        if(result.size()==0) {
+            map.put("status", "failed");
+        }
+        else{
+            int id = result.get(0).getId();
+            map.put("userid",String.valueOf(id));
+            map.put("status", "success");
+        }
+        return map;
+    }
+
+    @CrossOrigin(origins = "*")
     @GetMapping("/viewtask")
     public List<Tasks> viewTask(){
         return (List<Tasks>)tdao.findAll();
